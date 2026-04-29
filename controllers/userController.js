@@ -1,0 +1,58 @@
+import userService from "../services/userService.js";
+
+const createUser = async (req, res, next) => {
+  try {
+    const user = await userService.createUser(req.body);
+    res.status(201).json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+const getAllUser = async (req, res, next) => {
+  try {
+    const user = await userService.getAllUser();
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+
+
+const getUserById = async (req, res, next) => {
+  try {
+    const userId = await userService.getUserById(req.params.id);
+    res.json(userId);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// const updateUser = async (req, res, next) => {
+//   try {
+//     const user = await userService.updateUser(req.params.id, req.body);
+//     res.json(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
+// const deactivateUser = async (req, res, next) => {
+//   try {
+//     const user = await userService.softDeleteUser(req.params.id);
+//     res.json({ message: "Usuário removido (soft delete) com sucesso", user });
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
+
+export default {
+  createUser,
+  getAllUser,
+   getUserById,    
+  //     updateUser,
+  //     deactivateUser
+}
+
