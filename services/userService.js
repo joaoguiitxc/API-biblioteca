@@ -20,6 +20,7 @@ const createUser = async (data) => {
 
 
   return user.create({ nome, email, telefone, ativo })
+
 }
 
 //list user
@@ -29,7 +30,8 @@ const getAllUser = async () => {
 
 //list user by id
 const getUserById = async (id) => {
-  const userId = await userId.findById(id);
+
+  const userId = await user.findById(id);
 
   if (!userId) {
     const error = new Error("Usuário não encontrado");
@@ -37,36 +39,39 @@ const getUserById = async (id) => {
     throw error;
   }
 
-  return userId.find();
+  return userId;
 }
 
-// const updateUser = async (id, data) => {
-//   const user = await user.findByIdAndUpdate(id, data, {
-//     new: true,
-//     runValidators: true,
-//   });
+const updateUser = async (id, data) => {
+  const userUpdate = await user.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
 
-//   if (!user) {
-//     const error = new Error("Usuário não encontrado");
-//     error.statusCode = 404;
-//     throw error;
-//   }
+  if (!userUpdate) {
+    const error = new Error("Usuário não encontrado");
+    error.statusCode = 404;
+    throw error;
+  }
 
-//   return user;
-// }
+  return userUpdate;
+}
 
-// const deactivateUser = async (id) => {
-//   const user = await user.findByIdAndUpdate(
-//     id,
-//     { ativo: false },
-//     { new: true }
-//   );
+const userDesativate = async (id) => {
+  const userDesativate = await user.findById(id)
+ 
 
-//   if (!user) {
-//     throw new Error("Usuário não encontrado");
-//   }
+  if (!userDesativate) {
+    const error = new Error("não foi possível encontrar usuário!");
+    error.statusCode = 404;
+    throw error;
+  }
 
-//   return user;
+ userDesativate.ativo = false
+await userDesativate.save();
+
+return userDesativate;
+}
 
 
 
@@ -75,11 +80,12 @@ export default {
   createUser,
   getAllUser,
   getUserById,
+  updateUser,
+  userDesativate,
 }
-//    
-//   
-//     updateUser,
-//     deactivateUser
+
+
+
 
 
 

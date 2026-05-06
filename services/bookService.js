@@ -1,27 +1,30 @@
-import book from "../models/user.js";
-import loan from "../models/loan.js";
+import book from "../models/book.js";
+// import loan from "../models/loan.js"
+
 
 const createBook = async (data) => {
-    const { titulo, autor, categoria, ano, quantidadeTotal, quantidadeDisponivel, ativo } = data;
+    const { titulo, autor, categoria, ano, quantidadeTotal, quantidadeDisponivel } = data;
 
-    if (!titulo || !autor || !categoria || !ano || !quantidadeTotal || quantidadeDisponivel || !ativo === undefined) {
-        const error = new Error("titulo, autor, categoria, ano, quantidade total e quantidade disponível são obrigatórios");
-        error.statusCode = 400;
-        throw error;
+     if (!titulo || !autor || !quantidadeTotal > 0 || quantidadeTotal === quantidadeDisponivel) {
+    const error = new Error("título, autor, quantidade total e quantidade disponível  são obrigatórios");
+    error.statusCode = 400;
+    throw error;
+  }
+
+    return book.create({
+        titulo,
+        autor,
+        categoria,
+        ano,
+        quantidadeDisponivel,
+        quantidadeTotal
+    })
+}
+
+
+    const getAllBook = async () => {
+        return book.find();
     }
-
-    const bookExists = await book.findOne({ idLivro: idLivro.toUpperCase() });
-
-    if (bookExists) {
-        const error = new Error("Já existe um livro cadastrado com esse id");
-        error.statusCode = 400;
-        throw error;
-    }
-
-
-//     const getAllBook = async () => {
-//         return book.find();
-//     }
 
 //     const getBookById = async (id) => {
 //         const book = await book.findById(id);
@@ -103,9 +106,8 @@ const createBook = async (data) => {
 //         return user;
 //     };
 
-}
-
-export default{
-cre
+export default {
+    createBook,
+    getAllBook
 }
 

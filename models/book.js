@@ -1,31 +1,55 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// const bookSchema = new mongoose.Schema(
-//     {
-//         name: {
-//             type: String,
-//             required: true,
-//             trim: true,
-//         },
-//         email: {
-//             type: String,
-//             required: true,
-//             trim: true,
-//         },
-//         telephone: {
-//             type: Number,
-//             required: true,
-//         },
-//         activo: {
-//             type: Boolean,
-//             default: true,
-//         }
+const bookSchema = new mongoose.Schema(
+    {
+        titulo: {
+            type: String,
+            required: true,
+            trim: true,
+        },
 
-//     },
-//     {
-//         collection: "book",
-//         timestamps: true,
-//     }
-// );
+        autor: {
+            type: String,
+            required: true,
+            // unique: true,
+            lowercase: true,
+            trim: true,
+        },
 
-// export default mongoose.model("Book", bookSchema);
+        categoria: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
+        quantidadeDisponivel: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
+
+        quantidadeTotal: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
+
+        ano: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
+        ativo: {
+            type: Boolean,
+            default: true,
+        },
+
+    },
+    {
+        collection: "book",
+        timestamps: true,
+    }
+);
+
+export default mongoose.model("Book", bookSchema);

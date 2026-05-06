@@ -29,30 +29,30 @@ const getUserById = async (req, res, next) => {
   }
 }
 
-// const updateUser = async (req, res, next) => {
-//   try {
-//     const user = await userService.updateUser(req.params.id, req.body);
-//     res.json(user);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+const updateUser = async (req, res, next) => {
+  try {
+    const user = await userService.updateUser(req.params.id, req.body);
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+}
 
-// const deactivateUser = async (req, res, next) => {
-//   try {
-//     const user = await userService.softDeleteUser(req.params.id);
-//     res.json({ message: "Usuário removido (soft delete) com sucesso", user });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+const userDesativate = async (req, res, next) => {
+  try {
+    const userDesativate = await userService.userDesativate(req.params.id);
+    res.json(userDesativate);
+  } catch (error) {
+    next(error);
+  }
+}
 
 
 export default {
   createUser,
   getAllUser,
-   getUserById,    
-  //     updateUser,
-  //     deactivateUser
+  getUserById,
+  updateUser,
+  userDesativate,
 }
 
