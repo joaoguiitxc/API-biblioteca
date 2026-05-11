@@ -5,11 +5,11 @@ import book from "../models/book.js";
 const createBook = async (data) => {
     const { titulo, autor, categoria, ano, quantidadeTotal, quantidadeDisponivel } = data;
 
-     if (!titulo || !autor || !quantidadeTotal > 0 || quantidadeTotal === quantidadeDisponivel) {
-    const error = new Error("título, autor, quantidade total e quantidade disponível  são obrigatórios");
-    error.statusCode = 400;
-    throw error;
-  }
+    if (!titulo || !autor || !quantidadeTotal > 0 || quantidadeTotal === quantidadeDisponivel) {
+        const error = new Error("título, autor, quantidade total e quantidade disponível  são obrigatórios");
+        error.statusCode = 400;
+        throw error;
+    }
 
     return book.create({
         titulo,
@@ -22,92 +22,80 @@ const createBook = async (data) => {
 }
 
 
-    const getAllBook = async () => {
-        return book.find();
+const getAllBook = async () => {
+    return book.find();
+}
+
+const getBookById = async (id) => {
+    const bookId = await book.findById(id);
+
+    if (!bookId) {
+        const error = new Error("livro não encontrado");
+        error.statusCode = 404;
+        throw error;
     }
 
-//     const getBookById = async (id) => {
-//         const book = await book.findById(id);
+    return bookId;
+}
 
-//         if (!book) {
-//             const error = new Error("livro não encontrado");
-//             error.statusCode = 404;
-//             throw error;
-//         }
+const getBookByTitle = async (titulo) => {
+    return book.find({
+        titulo: { $regex: titulo, $options: "i" }
+    });
+};
 
-//         return book;
-//     }
-
-//     const getCarByTitle = async (id) => {
-//         const book = await book.findById(id);
-
-//         if (!book) {
-//             const error = new Error("Carro não encontrado");
-//             error.statusCode = 404;
-//             throw error;
-//         }
-
-//         return book;
-//     }
-
-//     const getBookByCategory = async ()
+const getBookByCategory = async (categoria) => {
+    return book.find({
+        categoria: { $regex: categoria, $options: "i" }
+    });
+};
 
 
-//     const getAvailableBook = async () => {
-//         return book.find({ disponivel: true });
-//     }
+const getAvailableBook = async () => {
+    return book.find({
+        quantidadeDisponivel: { $gte: 0 },
+    });
 
-//     const updateBook = async (id, data) => {
-//         const book = await Book.findById(id);
-
-//         if (!book) {
-//             const error = new Error("Livro não encontrado");
-//             error.statusCode = 404;
-//             throw error;
-//         }
-
-//         // valores atuais
-//         const quantidadeTotalAtual = book.quantidadeTotal;
-//         const quantidadeDisponivelAtual = book.quantidadeDisponivel;
-
-//         const emprestados = quantidadeTotalAtual - quantidadeDisponivelAtual;
-
-//         // se estiver tentando alterar quantidadeTotal
-//         if (data.quantidadeTotal !== undefined) {
-//             if (data.quantidadeTotal < emprestados) {
-//                 const error = new Error(
-//                     "Quantidade total não pode ser menor que a quantidade emprestada"
-//                 );
-//                 error.statusCode = 400;
-//                 throw error;
-//             }
-//         }
-
-//         // faz o update
-//         Object.assign(book, data);
-
-//         await book.save();
-
-//         return book;
-//     }
+}
 
 
-//     const deactivateBook = async (id) => {
-//         const book = await book.findByIdAndUpdate(
-//             id,
-//             { ativo: false },
-//             { new: true }
-//         );
+const updateBook = async (id, data) => {
+    const updateBook = await book.findByIdAndUpdate(id, data, {
+        new: true,
+        runValidators: true,
+    });
 
-//         if (!book) {
-//             throw new Error("Livro não encontrado");
-//         }
+    if (!updateBook) {
+        const error = new Error("livro não encontrado");
+        error.statusCode = 404;
+        throw error;
+    }
 
-//         return user;
-//     };
+    return updateBook;
+};
+
+const desactivateBook = async (id) => {
+    const offBook = await book.findByIdAndUpdate(
+        id,
+        { ativo: false },
+        { new: true }
+    );
+
+    if (!offBook) {
+        throw new Error("Livro não encontrado");
+    }
+
+    return offBook;
+};
 
 export default {
     createBook,
-    getAllBook
+    getAllBook,
+    getBookById,
+    getBookByTitle,
+    getBookByCategory,
+    getAvailableBook,
+    updateBook,
+    desactivateBook
 }
 

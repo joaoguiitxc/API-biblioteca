@@ -1,7 +1,7 @@
-// import express from "express";
-// import loanController from "../controllers/loanController.js";
+import express from "express";
+import loanController from "../controllers/loanController.js";
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post("/", loanController.createLoan);
+router.post("/", loanController.createLoan);
 // router.get("/", loanController.getAllLoan);
