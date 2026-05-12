@@ -3,36 +3,35 @@ import mongoose from "mongoose";
 const loanSchema = new mongoose.Schema(
     {
         userId: {
-            type: Number,
+            type: String,
             ref: "User",
             required: true,
         },
         bookId: {
-            type: Number,
+            type: String,
             ref: "Book",
             required: true,
         },
         dataEmprestimo: {
-            type: Number,
+            type: Date,
             required: true,
+            default: Date.now,
         },
         dataPrevistaDevolucao: {
-            type: String,
+            type: Date,
             required: true,
-            enum: ["22/05", "23/05", "24/05", "25/05"],
         },
         dataDevolucao: {
             type: Date,
-            default: Date.now,
         },
         status: {
-            type: Boolean,
+            type: String,
             enum: ["pendente", "devolvido", "cancelada"],
-          default: true,
+            required: true,
+            default: "pendente",
         },
         multa: {
             type: Number,
-            required: true,
         }
     },
     {

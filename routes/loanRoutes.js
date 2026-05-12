@@ -5,3 +5,6 @@ const router = express.Router();
 
 router.post("/", loanController.createLoan);
 // router.get("/", loanController.getAllLoan);
+
+
+export default router;

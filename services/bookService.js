@@ -1,5 +1,5 @@
 import book from "../models/book.js";
-// import loan from "../models/loan.js"
+import loan from "../models/loan.js"
 
 
 const createBook = async (data) => {
