@@ -4,7 +4,7 @@ const loanSchema = new mongoose.Schema(
     {
         userId: {
             type: String,
-            ref: "User",
+            ref: "user",
             required: true,
         },
         bookId: {
