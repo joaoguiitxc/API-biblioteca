@@ -40,7 +40,9 @@ const createLoan = async (data) => {
     bookId,
     {
       quantidadeDisponivel: books.quantidadeDisponivel - 1,
-    }
+    },
+    { new: true, runValidators: true }
+
   )
 }
 
@@ -72,13 +74,70 @@ const getLoanActivate = async () => {
     .populate("bookId");
 };
 
-// const patchBook = async () => {
-// }
+const returnBook = async (id) => {
+
+  const loanReturn = await loan.findById(id)
+
+  if (!loanReturn) {
+    const error = new Error("empréstimo não encontrado");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (loanReturn.quantidadeDisponivel <= 0) {
+    const error = new Error("esse livro não está disponível para empréstimos");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const datedevolution = await loan.findByIdAndUpdate(
+    id,
+    {
+      datadevolucao: Date.now(),
+    },
+    { new: true, runValidators: true }
+  )
+
+  const statusback = await loan.findByIdAndUpdate(
+    id,
+    {
+      status: "devolvido",
+    },
+    { new: true, runValidators: true }
+  )
+
+  const increaseAvailableQuantity = await book.findByIdAndUpdate(
+    id,
+    {
+      $inc: {quantidadeDisponivel: 1} },
+    { new: true, runValidators: true }
+
+  )
+  
+  const milissegundosDeAtraso = Date.now() - loanReturn.dataPrevistaDevolucao;
+  const dias = parseInt(milissegundosDeAtraso / (1000 * 60 * 60 * 24));
+  const multa = dias > 0 ? dias * 2 : 0;
+
+   const advertence = await loan.findByIdAndUpdate(
+    id,
+    {
+      multa
+    },
+    { new: true, runValidators: true }
+
+  )
+
+  return {
+    loanReturn,
+    multa
+};
+}
 
 export default {
   createLoan,
   getAllLoan,
   getLoanById,
   getLoanUserId,
-  getLoanActivate
+  getLoanActivate,
+  returnBook
 }

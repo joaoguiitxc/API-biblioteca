@@ -8,4 +8,5 @@ router.get("/", loanController.getAllLoan);
 router.get("/:id", loanController.getLoanById);
 router.get("/user/:userId", loanController.getLoanUserId);
 router.get("/activate/algcoisa", loanController.getLoanActivate);
+router.get("/:id/return", loanController.returnBook);
 export default router;

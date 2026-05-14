@@ -44,16 +44,21 @@ const getLoanActivate = async (req, res, next) => {
         next(error);
     }
 }
-
-// const patchBook = async (req,res,next) => {
-//     try
-// }
+const returnBook = async (req,res, next) => {
+    try {
+        const loan = await loanService.returnBook(req.params.id);
+        res.json(loan);
+    } catch (error) {
+    next(error);
+    }
+}
 
 export default {
     createLoan,
     getAllLoan,
     getLoanById,
     getLoanUserId,
-    getLoanActivate
+    getLoanActivate,
+    returnBook
 }
 
