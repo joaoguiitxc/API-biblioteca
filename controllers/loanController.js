@@ -44,14 +44,60 @@ const getLoanActivate = async (req, res, next) => {
         next(error);
     }
 }
-const returnBook = async (req,res, next) => {
+const returnBook = async (req, res, next) => {
     try {
         const loan = await loanService.returnBook(req.params.id);
         res.json(loan);
     } catch (error) {
-    next(error);
+        next(error);
     }
 }
+
+const listOverdueLoans = async (req, res, next) => {
+    try {
+        const loan = await loanService.listOverdueLoans(req.params.status);
+        res.json(loan);
+    } catch (error) {
+        next(error);
+    }
+}
+
+const simulateFine = async (req, res, next) => {
+    try {
+        const loanSimulateFine = await loanService.simulateFine(req.params.id);
+        res.json(loanSimulateFine);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const dashBordGeral = async (req, res, next) => {
+    try {
+        const dashboard = await loanService.dashBordGeral();
+        res.json(dashboard);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const listUsersWithActiveLoans = async (req, res, next) => {
+    try {
+        const lsti = await loanService.listUsersWithActiveLoans();
+        res.json(lsti);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+const listMostBorrowedBooks = async (req, res, next) => {
+    try {
+        const listBooks = await loanService.listMostBorrowedBooks();
+        res.json(listBooks);
+    } catch (error) {
+        next(error);
+    }
+};
 
 export default {
     createLoan,
@@ -59,6 +105,11 @@ export default {
     getLoanById,
     getLoanUserId,
     getLoanActivate,
-    returnBook
+    returnBook,
+    listOverdueLoans,
+    simulateFine,
+    dashBordGeral,
+    listUsersWithActiveLoans,
+    listMostBorrowedBooks
 }
 

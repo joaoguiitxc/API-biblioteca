@@ -109,16 +109,17 @@ const returnBook = async (id) => {
   const increaseAvailableQuantity = await book.findByIdAndUpdate(
     id,
     {
-      $inc: {quantidadeDisponivel: 1} },
+      $inc: { quantidadeDisponivel: 1 }
+    },
     { new: true, runValidators: true }
 
   )
-  
+
   const milissegundosDeAtraso = Date.now() - loanReturn.dataPrevistaDevolucao;
   const dias = parseInt(milissegundosDeAtraso / (1000 * 60 * 60 * 24));
   const multa = dias > 0 ? dias * 2 : 0;
 
-   const advertence = await loan.findByIdAndUpdate(
+  const advertence = await loan.findByIdAndUpdate(
     id,
     {
       multa
@@ -130,8 +131,81 @@ const returnBook = async (id) => {
   return {
     loanReturn,
     multa
-};
+  }
 }
+
+const listOverdueLoans = async () => {
+  const overdueLoans = await loan.find({
+    status: "pendente", dataPrevistaDevolucao: { $lte: new Date() }
+  })
+
+  return overdueLoans;
+}
+
+const simulateFine = async (id) => {
+  const loanSimulateFine = await loan.findById(id)
+
+  if (!loanSimulateFine) {
+    const error = new Error("empréstimo não encontrado")
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const dias = (Date.now() - loan.dataPrevistaDevolucao) / (1000 * 60 * 60 * 24);
+  const multa = dias > 0 ? dias * 2 : 0;
+
+  return {
+    multa
+  }
+}
+const dashBordGeral = async () => {
+  const totalUsuarios = await user.countDocuments();
+  const totalUsuariosAtivos = await user.countDocuments({
+    status: "ativo"
+  })
+  const totalLivros = await book.countDocuments();
+  const totalLivrosAtivos = await book.countDocuments({
+    status: "ativo"
+  })
+  const totalLivrosDisponiveis = await book.countDocuments({
+    quantidadeDisponivel: { $gt: 0 }
+  })
+  const totalEmprestimos = await loan.countDocuments();
+  const totalEmprestimosAtivos = await loan.countDocuments({
+    status: "pendente"
+  })
+  const totalEmprestimosAtrasados = await loan.countDocuments({
+    status: "pendente",
+    dataPrevistaDevolucao: { $lt: new Date() }
+  })
+  const multas = await loan.find();
+
+  const totalMultasGeradas = await loan.countDocuments({
+    multa: { $gt: 0 }
+  })
+
+  return {
+    totalUsuarios,
+    totalUsuariosAtivos,
+    totalLivros,
+    totalLivrosAtivos,
+    totalLivrosDisponiveis,
+    totalEmprestimos,
+    totalEmprestimosAtivos,
+    totalEmprestimosAtrasados,
+    totalMultasGeradas
+  }
+}
+
+const listUsersWithActiveLoans = async () => {
+  const lsti = await loan.find
+    ({
+      status: "pendente"
+    })
+  return lsti;
+}
+
+
 
 export default {
   createLoan,
@@ -139,5 +213,12 @@ export default {
   getLoanById,
   getLoanUserId,
   getLoanActivate,
-  returnBook
+  returnBook,
+  listOverdueLoans,
+  simulateFine,
+  dashBordGeral,
+  dashBordGeral,
+  listUsersWithActiveLoans,
+  listMostBorrowedBooks
+
 }

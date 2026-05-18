@@ -9,4 +9,8 @@ router.get("/:id", loanController.getLoanById);
 router.get("/user/:userId", loanController.getLoanUserId);
 router.get("/activate/algcoisa", loanController.getLoanActivate);
 router.get("/:id/return", loanController.returnBook);
+router.get("/loan/overdue", loanController.listOverdueLoans);
+router.post("/loan/:id/fine/simulate",loanController.simulateFine); 
+router.get("/admin/dashbord/", loanController.dashBordGeral);
+router.get("/admin/users/with-active-loans",loanController.listUsersWithActiveLoans);
 export default router;
