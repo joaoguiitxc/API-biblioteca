@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import loanRoutes from "./routes/loanRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -16,9 +17,11 @@ app.get("/", (req, res) => {
   res.json({ message: "API de biblioteca funcionando" });
 });
 
+
 app.use("/user", userRoutes);
- app.use("/book", bookRoutes);
+app.use("/book", bookRoutes);
 app.use("/loan", loanRoutes);
+app.use("/auth", authRoutes);
 
 const startServer = async () => {
   try {
@@ -31,5 +34,7 @@ const startServer = async () => {
     console.log("Erro ao iniciar o servidor:", error.message);
   }
 };
+
+
 
 startServer();

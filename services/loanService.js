@@ -3,10 +3,10 @@ import loan from "../models/loan.js";
 import user from "../models/user.js";
 import book from "../models/book.js";
 
-const createLoan = async (data) => {
-  const { userId, bookId, diasParaDevolucao } = data;
+const createLoan = async (userId, data) => {
+  const {  bookId, diasParaDevolucao } = data;
 
-  if (!userId || !bookId || !diasParaDevolucao) {
+  if (!bookId || !diasParaDevolucao) {
     const error = new Error("userId,bookId,dias para devolução são");
     error.statusCode = 400;
     throw error;
@@ -205,7 +205,33 @@ const listUsersWithActiveLoans = async () => {
   return lsti;
 }
 
+const listMostBorrowedBooks = async () => {
+  const loans = await loan.find().populate("bookId");
 
+  const livros = {};
+
+  for (let i = 0; i < loans.length; i++) {
+    const titulo = loans[i].bookId.titulo;
+
+    if (livros[titulo]) {
+      livros[titulo] += 1;
+    } else {
+      livros[titulo] = 1;
+    }
+
+  }
+
+  return livros;
+};
+
+const listFines = async () => {
+  const fines = await loan.find({
+    status: "devolvido",
+    multa: { $gt: 0 }
+  });
+
+  return fines;
+};
 
 export default {
   createLoan,
@@ -219,6 +245,7 @@ export default {
   dashBordGeral,
   dashBordGeral,
   listUsersWithActiveLoans,
-  listMostBorrowedBooks
-
+  listMostBorrowedBooks,
+  listFines
 }
+

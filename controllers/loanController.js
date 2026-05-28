@@ -2,7 +2,7 @@ import loanService from "../services/loanService.js";
 
 const createLoan = async (req, res, next) => {
     try {
-        const loan = await loanService.createLoan(req.body);
+        const loan = await loanService.createLoan(req.user._id, req.body);
         res.status(201).json(loan);
     } catch (error) {
         next(error);
@@ -99,6 +99,17 @@ const listMostBorrowedBooks = async (req, res, next) => {
     }
 };
 
+const listFines = async (req, res, next) => {
+    try {
+        const listFines = await loanService.listFines();
+        res.json(listFines);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
 export default {
     createLoan,
     getAllLoan,
@@ -110,6 +121,7 @@ export default {
     simulateFine,
     dashBordGeral,
     listUsersWithActiveLoans,
-    listMostBorrowedBooks
+    listMostBorrowedBooks,
+    listFines
 }
 
